@@ -9,7 +9,9 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
-import DashboardMock from './pages/DashboardMock';
+
+import DashboardPage from './pages/DashboardPage';
+import ShipmentsPage from './pages/ShipmentsPage';
 
 function App() {
   return (
@@ -38,10 +40,27 @@ function App() {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <DashboardMock />
+                <DashboardPage />
               </ProtectedRoute>
             }
           />
+          
+          <Route
+            path="/shipments"
+            element={
+              <ProtectedRoute>
+                <ShipmentsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Secondary Sub-route Fallbacks redirecting to Dashboard until respective module */}
+          <Route path="/customers" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+          <Route path="/tracking" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+          <Route path="/status" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+          <Route path="/notifications" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+          <Route path="/reports" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
 
           {/* Fallback Route */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
