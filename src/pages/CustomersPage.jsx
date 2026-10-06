@@ -24,8 +24,43 @@ import {
   XCircle,
   Eye,
   Edit,
-  Trash2
+  Trash2,
+  RefreshCw,
+  Loader2
 } from 'lucide-react';
+
+const CustomerAvatar = ({ customer, size = 'w-10 h-10', textSize = 'text-xs' }) => {
+  const [imgError, setImgError] = useState(false);
+
+  const getInitials = (name) => {
+    if (!name) return 'CU';
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  return (
+    <div
+      className={`${size} rounded-xl flex items-center justify-center font-bold ${textSize} border overflow-hidden flex-shrink-0 ${
+        customer.avatarBg || 'bg-emerald-100 text-emerald-800 border-emerald-300'
+      }`}
+    >
+      {customer.avatarUrl && !imgError ? (
+        <img
+          src={customer.avatarUrl}
+          alt={customer.name}
+          className="w-full h-full object-cover"
+          onError={() => setImgError(true)}
+        />
+      ) : (
+        getInitials(customer.name)
+      )}
+    </div>
+  );
+};
 
 const CustomersPage = () => {
   const {
@@ -34,6 +69,9 @@ const CustomersPage = () => {
     isProfileDrawerOpen,
     isFormDrawerOpen,
     editingCustomer,
+    isLoading,
+    error,
+    refreshFromAPI,
     openProfileDrawer,
     closeProfileDrawer,
     openFormDrawer,
@@ -68,9 +106,9 @@ const CustomersPage = () => {
   const metrics = useMemo(() => {
     const total = customers.length;
     const active = customers.filter((c) => c.status === 'Active').length;
-    const vip = customers.filter((c) => c.status === 'VIP').length;
+    const plus = customers.filter((c) => c.status === 'Plus Member' || c.status === 'Plus' || c.status === 'VIP').length;
     const inactive = customers.filter((c) => c.status === 'Inactive').length;
-    return { total, active, vip, inactive };
+    return { total, active, plus, inactive };
   }, [customers]);
 
   // Filter & Sort
@@ -132,6 +170,8 @@ const CustomersPage = () => {
 
   const getStatusBadge = (status) => {
     switch (status) {
+      case 'Plus Member':
+      case 'Plus':
       case 'VIP':
         return 'bg-purple-100 text-purple-800 border border-purple-300 font-bold';
       case 'Active':
@@ -195,13 +235,24 @@ const CustomersPage = () => {
               </p>
             </div>
 
-            <button
-              onClick={() => openFormDrawer(null)}
-              className="px-5 py-2.5 bg-[#385429] hover:bg-[#233D19] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition duration-200 cursor-pointer self-start sm:self-auto"
-            >
-              <Plus className="w-4 h-4" />
-              <span>+ Add Customer</span>
-            </button>
+            <div className="flex items-center gap-2 self-start sm:self-auto">
+              <button
+                onClick={refreshFromAPI}
+                className="px-4 py-2.5 bg-[#EEF4E8] hover:bg-[#E1EAD8] text-[#3E582A] rounded-xl text-xs font-bold flex items-center justify-center gap-2 border border-[#DCE6D2] shadow-2xs transition duration-200 cursor-pointer"
+                title="Sync fresh live customer data from DummyJSON Users API"
+              >
+                <RefreshCw className="w-4 h-4 text-[#587640]" />
+                <span>Sync Live API</span>
+              </button>
+
+              <button
+                onClick={() => openFormDrawer(null)}
+                className="px-5 py-2.5 bg-[#385429] hover:bg-[#233D19] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition duration-200 cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>+ Add Customer</span>
+              </button>
+            </div>
           </div>
 
           {/* Metric Summary Cards */}
@@ -231,8 +282,8 @@ const CustomersPage = () => {
                 <Award className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-xs font-bold text-purple-800">VIP Members</p>
-                <p className="text-xl font-extrabold text-purple-900">{metrics.vip}</p>
+                <p className="text-xs font-bold text-purple-800">Plus Members</p>
+                <p className="text-xl font-extrabold text-purple-900">{metrics.plus}</p>
               </div>
             </div>
 
@@ -290,7 +341,7 @@ const CustomersPage = () => {
               >
                 <option value="All">All Tiers</option>
                 <option value="Active">Active</option>
-                <option value="VIP">VIP</option>
+                <option value="Plus Member">Plus Member</option>
                 <option value="Inactive">Inactive</option>
               </select>
 
@@ -345,7 +396,17 @@ const CustomersPage = () => {
           </div>
 
           {/* Table / Grid */}
-          {filteredCustomers.length === 0 ? (
+          {isLoading ? (
+            <div className="bg-white rounded-2xl border border-[#DCE6D2] p-16 text-center shadow-2xs">
+              <Loader2 className="w-10 h-10 text-[#385429] animate-spin mx-auto mb-3" />
+              <h3 className="font-['Plus_Jakarta_Sans'] font-extrabold text-base text-[#233D19]">
+                Fetching Live Customers...
+              </h3>
+              <p className="text-xs text-[#698453] mt-1">
+                Loading real customer account records from DummyJSON Users API.
+              </p>
+            </div>
+          ) : filteredCustomers.length === 0 ? (
             <div className="bg-white rounded-2xl border border-[#DCE6D2] p-12 text-center">
               <Users className="w-12 h-12 text-[#9BB388] mx-auto mb-3" />
               <h3 className="font-['Plus_Jakarta_Sans'] font-extrabold text-base text-[#233D19]">
@@ -409,11 +470,7 @@ const CustomersPage = () => {
 
                           <td className="py-4 px-4">
                             <div className="flex items-center gap-3">
-                              <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs border ${
-                                customer.avatarBg || 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                              }`}>
-                                {getInitials(customer.name)}
-                              </div>
+                              <CustomerAvatar customer={customer} size="w-10 h-10" textSize="text-xs" />
                               <div>
                                 <span className="font-extrabold text-[#233D19] block">{customer.name}</span>
                                 <span className="text-[10px] font-mono text-[#7A9560]">{customer.id}</span>
@@ -451,7 +508,7 @@ const CustomersPage = () => {
                               )}`}
                             >
                               <option value="Active">Active</option>
-                              <option value="VIP">VIP</option>
+                              <option value="Plus Member">Plus Member</option>
                               <option value="Inactive">Inactive</option>
                             </select>
                           </td>
@@ -538,11 +595,7 @@ const CustomersPage = () => {
                   >
                     <div>
                       <div className="flex items-start justify-between gap-3 mb-4">
-                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-sm border ${
-                          customer.avatarBg || 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                        }`}>
-                          {getInitials(customer.name)}
-                        </div>
+                        <CustomerAvatar customer={customer} size="w-12 h-12" textSize="text-sm" />
 
                         <div onClick={(e) => e.stopPropagation()}>
                           <select
@@ -553,7 +606,7 @@ const CustomersPage = () => {
                             )}`}
                           >
                             <option value="Active">Active</option>
-                            <option value="VIP">VIP</option>
+                            <option value="Plus Member">Plus Member</option>
                             <option value="Inactive">Inactive</option>
                           </select>
                         </div>

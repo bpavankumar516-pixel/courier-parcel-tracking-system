@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getCustomersFromStorage, saveCustomersToStorage } from '../services/customerData';
+import { fetchCustomersFromAPI, getCustomersFromStorage, saveCustomersToStorage } from '../services/customerData';
 import { toast } from 'react-toastify';
 
 const CustomerContext = createContext();
@@ -10,12 +10,49 @@ export const CustomerProvider = ({ children }) => {
   const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false);
   const [isFormDrawerOpen, setIsFormDrawerOpen] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Load initial customer state
+  // Fetch customers from API or local storage cache
+  const loadCustomers = async (forceRefresh = false) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { data } = await fetchCustomersFromAPI(forceRefresh);
+      setCustomers(data);
+    } catch (err) {
+      console.error('Failed to fetch customers:', err);
+      setError(err.message || 'Failed to fetch customer data');
+      toast.error('Could not fetch live customer data. Using fallback.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const loadedCustomers = getCustomersFromStorage();
-    setCustomers(loadedCustomers);
+    loadCustomers(false);
   }, []);
+
+  const refreshFromAPI = async () => {
+    const loadingToast = toast.loading('Syncing customer data from DummyJSON Users API...');
+    try {
+      const { data } = await fetchCustomersFromAPI(true);
+      setCustomers(data);
+      toast.update(loadingToast, {
+        render: 'Successfully synced live user data from DummyJSON API!',
+        type: 'success',
+        isLoading: false,
+        autoClose: 3000
+      });
+    } catch (err) {
+      toast.update(loadingToast, {
+        render: 'Failed to sync API data: ' + err.message,
+        type: 'error',
+        isLoading: false,
+        autoClose: 3000
+      });
+    }
+  };
 
   // Save to LocalStorage whenever customers change
   const updateCustomersState = (newCustomers) => {
@@ -123,6 +160,9 @@ export const CustomerProvider = ({ children }) => {
         isProfileDrawerOpen,
         isFormDrawerOpen,
         editingCustomer,
+        isLoading,
+        error,
+        refreshFromAPI,
         openProfileDrawer,
         closeProfileDrawer,
         openFormDrawer,

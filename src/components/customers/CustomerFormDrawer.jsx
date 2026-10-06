@@ -53,7 +53,7 @@ const CustomerFormDrawer = ({ isOpen, onClose, onSubmit, initialData }) => {
   };
 
   return (
-    <div className="w-full lg:w-[420px] bg-white border-l border-[#DCE6D2] h-full overflow-y-auto flex flex-col justify-between font-['Inter'] shadow-2xl z-30 transition-all duration-300">
+    <div className="fixed top-0 right-0 h-screen w-full sm:w-[440px] lg:w-[440px] bg-white border-l border-[#DCE6D2] overflow-y-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden flex flex-col justify-between font-['Inter'] shadow-2xl z-50 transition-all duration-300">
       <div>
         {/* Form Drawer Header */}
         <div className="p-6 border-b border-[#EEF4E8] flex items-center justify-between sticky top-0 bg-white z-10">
@@ -178,7 +178,7 @@ const CustomerFormDrawer = ({ isOpen, onClose, onSubmit, initialData }) => {
               className="w-full px-4 py-2.5 bg-white border border-[#DCE6D2] rounded-xl text-xs text-[#233D19] font-semibold focus:outline-none focus:ring-2 focus:ring-[#587640] transition"
             >
               <option value="Active">Active Customer</option>
-              <option value="VIP">VIP Account</option>
+              <option value="Plus Member">Plus Member Account</option>
               <option value="Inactive">Inactive</option>
             </select>
           </div>

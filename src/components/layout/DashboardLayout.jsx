@@ -4,7 +4,7 @@ import Header from './Header';
 
 const DashboardLayout = ({ children }) => {
   return (
-    <div className="min-h-screen bg-[#F4F7EF] flex font-['Inter'] text-[#233D19]">
+    <div className="min-h-screen bg-white flex font-['Inter'] text-[#233D19]">
       {/* Sidebar Navigation */}
       <Sidebar />
 

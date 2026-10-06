@@ -27,11 +27,11 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 bg-[#EAF1E2] border-r border-[#D3E0C6] flex flex-col justify-between h-screen sticky top-0 z-30 select-none flex-shrink-0 font-['Inter']">
+    <aside className="w-64 bg-white border-r border-[#E1EAD8] flex flex-col justify-between h-screen sticky top-0 z-30 select-none flex-shrink-0 font-['Inter']">
       
       {/* Top Header & Brand Logo */}
       <div>
-        <div className="p-6 border-b border-[#D8E4CB]/60">
+        <div className="p-6 border-b border-[#E1EAD8]">
           <Logo size="medium" />
         </div>
 
@@ -47,12 +47,12 @@ const Sidebar = () => {
                 to={item.path}
                 className={`flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-semibold transition-all duration-200 ${
                   isActive
-                    ? 'bg-[#C5D9B0] text-[#1E3713] font-bold shadow-2xs'
-                    : 'text-[#4A6437] hover:bg-[#DDEBCE] hover:text-[#233D19]'
+                    ? 'bg-[#EEF4E8] text-[#233D19] font-bold shadow-2xs border border-[#DCE6D2]'
+                    : 'text-[#4A6437] hover:bg-[#F7F9F5] hover:text-[#233D19]'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-[#1E3713]' : 'text-[#587640]'}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-[#233D19]' : 'text-[#587640]'}`} />
                   <span>{item.name}</span>
                 </div>
 
@@ -65,14 +65,14 @@ const Sidebar = () => {
             );
           })}
 
-          <div className="pt-4 mt-2 border-t border-[#D3E0C6]/70">
+          <div className="pt-4 mt-2 border-t border-[#E1EAD8]">
             <NavLink
               to="/settings"
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-semibold transition-all duration-200 ${
                   isActive
-                    ? 'bg-[#C5D9B0] text-[#1E3713] font-bold shadow-2xs'
-                    : 'text-[#4A6437] hover:bg-[#DDEBCE] hover:text-[#233D19]'
+                    ? 'bg-[#EEF4E8] text-[#233D19] font-bold shadow-2xs border border-[#DCE6D2]'
+                    : 'text-[#4A6437] hover:bg-[#F7F9F5] hover:text-[#233D19]'
                 }`
               }
             >
@@ -84,16 +84,16 @@ const Sidebar = () => {
       </div>
 
       {/* Bottom Promo / Quote Illustration Card */}
-      <div className="p-4 m-4 bg-[#DCE8CF] rounded-3xl border border-[#C5D7B3] relative overflow-hidden shadow-2xs">
+      <div className="p-4 m-4 bg-[#F7F9F5] rounded-3xl border border-[#DCE6D2] relative overflow-hidden shadow-2xs">
         <div className="flex items-center justify-center mb-2">
           {/* Leaves & Box Illustration */}
-          <div className="w-14 h-14 bg-white/60 backdrop-blur-xs rounded-2xl flex items-center justify-center border border-[#B8CC9F]/50 shadow-2xs">
-            <Package className="w-7 h-7 text-[#466731]" />
+          <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center border border-[#DCE6D2] shadow-2xs">
+            <Package className="w-7 h-7 text-[#385429]" />
           </div>
         </div>
-        <p className="text-center font-['Plus_Jakarta_Sans'] font-extrabold text-xs text-[#203912] leading-snug">
+        <p className="text-center font-['Plus_Jakarta_Sans'] font-extrabold text-xs text-[#233D19] leading-snug">
           Faster Deliveries<br />
-          <span className="font-semibold text-[#486634]">Happier Customers</span>
+          <span className="font-semibold text-[#587640]">Happier Customers</span>
         </p>
       </div>
 

@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useShipments } from '../context/ShipmentContext';
+import { useCustomers } from '../context/CustomerContext';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import MetricCard from '../components/dashboard/MetricCard';
 import OnTimeGaugeCard from '../components/dashboard/OnTimeGaugeCard';
@@ -12,7 +14,36 @@ import { Package, Truck, CheckCircle2, Clock, Users, Calendar, Target, ChevronDo
 
 const DashboardPage = () => {
   const { user } = useAuth();
-  const [dateFilter, setDateFilter] = useState('Today');
+  const { shipments = [] } = useShipments();
+  const { customers = [] } = useCustomers();
+  const [dateFilter, setDateFilter] = useState('All Time');
+
+  // Dynamic calculations based on live Shipment & Customer Context data
+  const metrics = useMemo(() => {
+    const totalShipments = shipments.length;
+    const inTransitCount = shipments.filter((s) => s.status === 'In Transit' || s.status === 'Out for Delivery').length;
+    const deliveredCount = shipments.filter((s) => s.status === 'Delivered').length;
+    const pendingCount = shipments.filter((s) => s.status === 'Pending' || s.status === 'Picked Up').length;
+
+    const totalCustomers = customers.length;
+    const activeShipmentsCount = inTransitCount + pendingCount;
+
+    // Delivery success rate percentage
+    const successRateVal = totalShipments > 0 ? Math.round((deliveredCount / totalShipments) * 1000) / 10 : 100;
+    const successRateText = `${successRateVal}%`;
+    const gaugePercent = totalShipments > 0 ? Math.round((deliveredCount / totalShipments) * 100) : 100;
+
+    return {
+      totalShipments,
+      inTransitCount,
+      deliveredCount,
+      pendingCount,
+      totalCustomers,
+      activeShipmentsCount,
+      successRateText,
+      gaugePercent
+    };
+  }, [shipments, customers]);
 
   return (
     <DashboardLayout>
@@ -25,7 +56,7 @@ const DashboardPage = () => {
               Dashboard
             </h1>
             <p className="text-xs sm:text-sm text-[#5C7847] mt-1 font-medium">
-              Welcome back, <span className="font-bold text-[#233D19]">{user?.name || 'Pavan Kumar'}</span>! Here's what's happening with your deliveries today.
+              Welcome back, <span className="font-bold text-[#233D19]">{user?.name || 'Pavan Kumar'}</span>! Here's what's happening with your live deliveries and customer accounts.
             </p>
           </div>
 
@@ -37,17 +68,17 @@ const DashboardPage = () => {
               <ChevronDown className="w-3.5 h-3.5 text-[#587640]" />
             </div>
             <span className="text-xs font-semibold text-[#668250]">
-              Sep 23, 2026
+              Oct 06, 2026
             </span>
           </div>
         </div>
 
-        {/* Row 1: 4 Key Metric Cards */}
+        {/* Row 1: 4 Key Metric Cards (Dynamic) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <MetricCard
             title="Total Shipments"
-            value="248"
-            changeText="↑ 12% vs. last week"
+            value={String(metrics.totalShipments)}
+            changeText="↑ Live Reactive Count"
             isPositive={true}
             icon={Package}
             badgeBg="bg-[#EAF3D8]"
@@ -57,8 +88,8 @@ const DashboardPage = () => {
 
           <MetricCard
             title="In Transit Parcels"
-            value="86"
-            changeText="↑ 8% vs. last week"
+            value={String(metrics.inTransitCount)}
+            changeText="Active En Route"
             isPositive={true}
             icon={Truck}
             badgeBg="bg-[#E0F2F1]"
@@ -68,8 +99,8 @@ const DashboardPage = () => {
 
           <MetricCard
             title="Delivered Parcels"
-            value="142"
-            changeText="↑ 15% vs. last week"
+            value={String(metrics.deliveredCount)}
+            changeText="Completed Handover"
             isPositive={true}
             icon={CheckCircle2}
             badgeBg="bg-[#E8F5E9]"
@@ -79,8 +110,8 @@ const DashboardPage = () => {
 
           <MetricCard
             title="Pending Deliveries"
-            value="20"
-            changeText="↓ 5% vs. last week"
+            value={String(metrics.pendingCount)}
+            changeText="Awaiting Dispatch"
             isPositive={false}
             icon={Clock}
             badgeBg="bg-[#FFF3E0]"
@@ -89,12 +120,12 @@ const DashboardPage = () => {
           />
         </div>
 
-        {/* Row 2: 3 Metrics + On-Time Delivery Gauge */}
+        {/* Row 2: 3 Metrics + On-Time Delivery Gauge (Dynamic) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <MetricCard
             title="Total Customers"
-            value="178"
-            changeText="↑ 10% vs. last month"
+            value={String(metrics.totalCustomers)}
+            changeText="Live DummyJSON API"
             isPositive={true}
             icon={Users}
             badgeBg="bg-[#F3E5F5]"
@@ -103,9 +134,9 @@ const DashboardPage = () => {
           />
 
           <MetricCard
-            title="Today's Shipments"
-            value="34"
-            changeText="↑ 22% vs. yesterday"
+            title="Active Operations"
+            value={String(metrics.activeShipmentsCount)}
+            changeText="In Transit & Pending"
             isPositive={true}
             icon={Calendar}
             badgeBg="bg-[#E4F6ED]"
@@ -115,8 +146,8 @@ const DashboardPage = () => {
 
           <MetricCard
             title="Delivery Success Rate"
-            value="96.8%"
-            changeText="↑ 2% vs. last week"
+            value={metrics.successRateText}
+            changeText="Live Fulfilled Rate"
             isPositive={true}
             icon={Target}
             badgeBg="bg-[#EAF3D8]"
@@ -124,7 +155,7 @@ const DashboardPage = () => {
             sparklineColor="#385429"
           />
 
-          <OnTimeGaugeCard percentage={96.8} />
+          <OnTimeGaugeCard percentage={metrics.gaugePercent} />
         </div>
 
         {/* Middle Section: Chart + Table (Left 8 Cols) & Activities + Actions (Right 4 Cols) */}

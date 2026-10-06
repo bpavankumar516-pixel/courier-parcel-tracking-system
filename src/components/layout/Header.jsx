@@ -26,7 +26,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="w-full bg-[#F4F7EF] py-4 px-6 lg:px-10 flex items-center justify-between sticky top-0 z-20 border-b border-[#E1EAD8]/60 font-['Inter']">
+    <header className="w-full bg-white py-4 px-6 lg:px-10 flex items-center justify-between sticky top-0 z-20 border-b border-[#E1EAD8]/60 font-['Inter']">
       
       {/* Search Bar Input */}
       <div className="flex-1 max-w-md">

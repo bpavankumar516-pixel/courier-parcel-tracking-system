@@ -19,7 +19,7 @@
 body {
   margin: 0;
   font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: #DDEBC8;
+  background-color: #FFFFFF;
   color: #243B32;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
@@ -56,4 +56,13 @@ body {
 .text-small {
   font-size: 14px;
   color: #6C7D75;
+}
+
+/* Hide scrollbar for Chrome, Safari, Opera, Firefox and Edge */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
