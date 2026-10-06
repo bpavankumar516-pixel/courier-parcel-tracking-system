@@ -115,43 +115,39 @@ const ForgotPasswordPage = () => {
               </p>
             </div>
 
-            {/* Tab Switcher (Matching Exact Screenshot Design) */}
-            <div className="bg-[#F2F6ED] p-1 rounded-full flex items-center justify-between gap-0 border border-[#DCE5D4] mb-5 text-xs font-semibold text-center select-none shadow-2xs">
+            {/* Seamless Tab Switcher Bar */}
+            <div className="bg-[#F2F6ED] p-1 rounded-full grid grid-cols-3 gap-1 border border-[#DCE5D4] mb-5 text-xs font-semibold text-center select-none shadow-2xs">
               <button
                 type="button"
                 onClick={() => navigate('/login')}
-                className={`flex-1 py-2.5 px-3 rounded-full transition-all duration-200 ${
+                className={`w-full py-2.5 px-2 rounded-full transition-all duration-200 cursor-pointer ${
                   activeTab === 'login'
                     ? 'bg-[#587640] text-white font-bold shadow-xs'
-                    : 'text-[#506941] hover:text-[#233D19]'
+                    : 'text-[#506941] hover:text-[#233D19] hover:bg-[#E4ECC0]/50'
                 }`}
               >
                 Login
               </button>
-              
-              <div className="w-[1px] h-4 bg-[#D2DDC8]"></div>
 
               <button
                 type="button"
                 onClick={() => navigate('/register')}
-                className={`flex-1 py-2.5 px-3 rounded-full transition-all duration-200 ${
+                className={`w-full py-2.5 px-2 rounded-full transition-all duration-200 cursor-pointer ${
                   activeTab === 'register'
                     ? 'bg-[#587640] text-white font-bold shadow-xs'
-                    : 'text-[#506941] hover:text-[#233D19]'
+                    : 'text-[#506941] hover:text-[#233D19] hover:bg-[#E4ECC0]/50'
                 }`}
               >
                 Register
               </button>
 
-              <div className="w-[1px] h-4 bg-[#D2DDC8]"></div>
-
               <button
                 type="button"
                 onClick={() => setActiveTab('forgot')}
-                className={`flex-1 py-2.5 px-3 rounded-full transition-all duration-200 ${
+                className={`w-full py-2.5 px-2 rounded-full transition-all duration-200 cursor-pointer ${
                   activeTab === 'forgot'
                     ? 'bg-[#587640] text-white font-bold shadow-xs'
-                    : 'text-[#506941] hover:text-[#233D19]'
+                    : 'text-[#506941] hover:text-[#233D19] hover:bg-[#E4ECC0]/50'
                 }`}
               >
                 Forgot Password
@@ -179,7 +175,7 @@ const ForgotPasswordPage = () => {
                           message: 'Invalid email format'
                         }
                       })}
-                      className={`w-full pl-10 pr-4 py-3 bg-[#FAFCF7] border ${
+                      className={`w-full pl-10 pr-4 py-3 bg-white border ${
                         emailErrors.email ? 'border-red-500' : 'border-[#D7E5BE] focus:border-[#587640]'
                       } rounded-xl text-xs text-[#233D19] placeholder-[#96AB82] focus:outline-none focus:ring-2 focus:ring-[#D7E5BE] transition`}
                     />
@@ -230,7 +226,7 @@ const ForgotPasswordPage = () => {
                         required: 'New password is required',
                         minLength: { value: 6, message: 'Must be at least 6 characters' }
                       })}
-                      className={`w-full pl-10 pr-10 py-3 bg-[#FAFCF7] border ${
+                      className={`w-full pl-10 pr-10 py-3 bg-white border ${
                         resetErrors.newPassword ? 'border-red-500' : 'border-[#D7E5BE] focus:border-[#587640]'
                       } rounded-xl text-xs text-[#233D19] placeholder-[#96AB82] focus:outline-none transition`}
                     />
@@ -262,7 +258,7 @@ const ForgotPasswordPage = () => {
                         required: 'Please confirm password',
                         validate: (val) => val === newPasswordValue || 'Passwords do not match'
                       })}
-                      className={`w-full pl-10 pr-4 py-3 bg-[#FAFCF7] border ${
+                      className={`w-full pl-10 pr-4 py-3 bg-white border ${
                         resetErrors.confirmNewPassword ? 'border-red-500' : 'border-[#D7E5BE] focus:border-[#587640]'
                       } rounded-xl text-xs text-[#233D19] placeholder-[#96AB82] focus:outline-none transition`}
                     />
