@@ -73,7 +73,13 @@ const RecentShipmentsTable = () => {
                   className="hover:bg-[#F9FCF7] transition-colors text-xs text-[#233D19] group"
                 >
                   <td className="py-3.5 pr-4 font-bold font-mono text-[#233D19] group-hover:text-[#587640] transition-colors">
-                    {shipment.trackingNo}
+                    <Link
+                      to={`/tracking?trackingNo=${shipment.trackingNo}`}
+                      className="hover:underline flex items-center gap-1 text-[#233D19] hover:text-[#2D5A27]"
+                      title="Track this parcel live"
+                    >
+                      {shipment.trackingNo}
+                    </Link>
                   </td>
                   <td className="py-3.5 px-4 font-medium text-[#465E37]">
                     {shipment.sender}

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { fetchCustomersFromAPI, getCustomersFromStorage, saveCustomersToStorage } from '../services/customerData';
 import { toast } from 'react-toastify';
+import { logActivity } from '../services/activityLogger';
 
 const CustomerContext = createContext();
 
@@ -38,6 +39,7 @@ export const CustomerProvider = ({ children }) => {
     try {
       const { data } = await fetchCustomersFromAPI(true);
       setCustomers(data);
+      logActivity('Live API customers synced', `Synced ${data.length} accounts from DummyJSON API`, 'customer_sync');
       toast.update(loadingToast, {
         render: 'Successfully synced live user data from DummyJSON API!',
         type: 'success',
@@ -104,15 +106,18 @@ export const CustomerProvider = ({ children }) => {
 
     const updated = [newCustomer, ...customers];
     updateCustomersState(updated);
+    logActivity('New customer account created', `${newCustomer.name} (${newCustomer.city || 'Active User'})`, 'customer_add');
     toast.success(`Customer ${newCustomer.name} added successfully!`);
     closeFormDrawer();
   };
 
   // Update Customer
   const updateCustomer = (id, updatedFields) => {
+    let updatedCustName = id;
     const updated = customers.map((c) => {
       if (c.id === id) {
         const newObj = { ...c, ...updatedFields };
+        updatedCustName = newObj.name || id;
         if (selectedCustomer && selectedCustomer.id === id) {
           setSelectedCustomer(newObj);
         }
@@ -121,14 +126,17 @@ export const CustomerProvider = ({ children }) => {
       return c;
     });
     updateCustomersState(updated);
+    logActivity('Customer details updated', `${updatedCustName}`, 'customer_update');
     toast.info(`Customer details updated`);
     closeFormDrawer();
   };
 
   // Update Status directly
   const updateCustomerStatus = (id, newStatus) => {
+    let custName = id;
     const updated = customers.map((c) => {
       if (c.id === id) {
+        custName = c.name;
         const newObj = { ...c, status: newStatus };
         if (selectedCustomer && selectedCustomer.id === id) {
           setSelectedCustomer(newObj);
@@ -138,6 +146,7 @@ export const CustomerProvider = ({ children }) => {
       return c;
     });
     updateCustomersState(updated);
+    logActivity('Customer status updated', `${custName} set to ${newStatus}`, 'customer_update');
     toast.success(`Customer status updated to ${newStatus}`);
   };
 
@@ -146,6 +155,7 @@ export const CustomerProvider = ({ children }) => {
     const cust = customers.find((c) => c.id === id);
     const updated = customers.filter((c) => c.id !== id);
     updateCustomersState(updated);
+    logActivity('Customer account deleted', `${cust ? cust.name : id}`, 'customer_delete');
     toast.warn(`Customer ${cust ? cust.name : id} deleted`);
     if (selectedCustomer && selectedCustomer.id === id) {
       closeProfileDrawer();

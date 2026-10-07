@@ -1,59 +1,54 @@
-import React, { useMemo } from 'react';
-import { Package, CheckCircle2, Truck, UserPlus, XCircle, Clock } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Package, CheckCircle2, Truck, UserPlus, XCircle, RefreshCw, UserCheck, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useShipments } from '../../context/ShipmentContext';
-import { useCustomers } from '../../context/CustomerContext';
+import { getActivitiesFromStorage } from '../../services/activityLogger';
 
 const RecentActivities = () => {
-  const { shipments = [] } = useShipments();
-  const { customers = [] } = useCustomers();
+  const [activities, setActivities] = useState(() => getActivitiesFromStorage());
 
-  // Dynamically generate real-time activities from live Contexts
-  const activities = useMemo(() => {
-    const list = [];
+  useEffect(() => {
+    // Initial fetch from LocalStorage
+    setActivities(getActivitiesFromStorage());
 
-    // Add recent shipments activities
-    shipments.slice(0, 4).forEach((s, idx) => {
-      let icon = Package;
-      let iconBg = 'bg-[#EAF3D8] text-[#587640]';
-      let title = `Shipment ${s.status}`;
-
-      if (s.status === 'Delivered') {
-        icon = CheckCircle2;
-        iconBg = 'bg-[#E8F5E9] text-[#2E7D32]';
-      } else if (s.status === 'In Transit' || s.status === 'Out for Delivery') {
-        icon = Truck;
-        iconBg = 'bg-[#E3F2FD] text-[#0066CC]';
-      } else if (s.status === 'Cancelled' || s.status === 'Failed Delivery') {
-        icon = XCircle;
-        iconBg = 'bg-[#FFEBEE] text-[#C62828]';
+    // Real-time listener for activity log dispatches
+    const handleActivityLog = (e) => {
+      if (e.detail) {
+        setActivities(e.detail);
+      } else {
+        setActivities(getActivitiesFromStorage());
       }
+    };
 
-      list.push({
-        id: `ship-${s.id || idx}`,
-        title: title,
-        subtitle: `${s.trackingNo} - ${s.sender} to ${s.receiver}`,
-        time: s.shippingDate || 'Recent',
-        icon,
-        iconBg
-      });
-    });
+    window.addEventListener('deliverly_activity_log', handleActivityLog);
+    return () => {
+      window.removeEventListener('deliverly_activity_log', handleActivityLog);
+    };
+  }, []);
 
-    // Add recent customer registration activity from live API users
-    if (customers.length > 0) {
-      const topCustomer = customers[0];
-      list.push({
-        id: `cust-${topCustomer.id}`,
-        title: 'New customer account synced',
-        subtitle: `${topCustomer.name} (${topCustomer.city})`,
-        time: topCustomer.joinedDate || 'Today',
-        icon: UserPlus,
-        iconBg: 'bg-[#F3E5F5] text-[#8E24AA]'
-      });
+  const getIconAndStyle = (type) => {
+    switch (type) {
+      case 'shipment_create':
+        return { icon: Package, iconBg: 'bg-[#EAF3D8] text-[#587640]' };
+      case 'shipment_deliver':
+        return { icon: CheckCircle2, iconBg: 'bg-[#E8F5E9] text-[#2E7D32]' };
+      case 'shipment_update':
+        return { icon: Truck, iconBg: 'bg-[#E3F2FD] text-[#0066CC]' };
+      case 'shipment_delete':
+        return { icon: XCircle, iconBg: 'bg-[#FFEBEE] text-[#C62828]' };
+      case 'customer_add':
+        return { icon: UserPlus, iconBg: 'bg-[#F3E5F5] text-[#8E24AA]' };
+      case 'customer_update':
+        return { icon: UserCheck, iconBg: 'bg-[#FFF3E0] text-[#E65100]' };
+      case 'customer_delete':
+        return { icon: XCircle, iconBg: 'bg-[#FFEBEE] text-[#C62828]' };
+      case 'customer_sync':
+        return { icon: RefreshCw, iconBg: 'bg-[#E0F2FE] text-[#0284C7]' };
+      default:
+        return { icon: Clock, iconBg: 'bg-gray-100 text-gray-600' };
     }
+  };
 
-    return list.slice(0, 5);
-  }, [shipments, customers]);
+  const displayActivities = activities.slice(0, 5);
 
   return (
     <div className="bg-white rounded-3xl p-6 border border-[#DCE6D2] shadow-[0_4px_20px_rgba(0,0,0,0.03)] font-['Inter']">
@@ -76,15 +71,15 @@ const RecentActivities = () => {
 
       {/* Activity Items List */}
       <div className="space-y-4">
-        {activities.length === 0 ? (
+        {displayActivities.length === 0 ? (
           <p className="text-xs text-center text-[#7A9560] py-4">No recent activity logs.</p>
         ) : (
-          activities.map((item) => {
-            const Icon = item.icon;
+          displayActivities.map((item) => {
+            const { icon: Icon, iconBg } = getIconAndStyle(item.type);
             return (
               <div key={item.id} className="flex items-center justify-between gap-3 group">
                 <div className="flex items-center gap-3.5 overflow-hidden">
-                  <div className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${item.iconBg}`}>
+                  <div className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${iconBg}`}>
                     <Icon className="w-4 h-4" />
                   </div>
                   <div className="overflow-hidden">
