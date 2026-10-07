@@ -16,6 +16,7 @@ import DashboardPage from './pages/DashboardPage';
 import ShipmentsPage from './pages/ShipmentsPage';
 import CustomersPage from './pages/CustomersPage';
 import ParcelTrackingPage from './pages/ParcelTrackingPage';
+import ReportsPage from './pages/ReportsPage';
 
 function App() {
   return (
@@ -73,7 +74,7 @@ function App() {
               <Route path="/tracking" element={<ProtectedRoute><ParcelTrackingPage /></ProtectedRoute>} />
               <Route path="/status" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
               <Route path="/notifications" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-              <Route path="/reports" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+              <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
               <Route path="/settings" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
 
               {/* Fallback Route */}
