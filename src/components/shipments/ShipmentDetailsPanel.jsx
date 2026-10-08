@@ -16,12 +16,15 @@ import {
   ChevronUp,
   Truck,
   ShieldCheck,
-  Navigation
+  Navigation,
+  MessageSquare
 } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { useSupport } from '../../context/SupportContext';
 
 const ShipmentDetailsPanel = ({ shipment, onClose, onEdit, onDelete, onStatusChange }) => {
   const [selectedStepIndex, setSelectedStepIndex] = useState(0);
+  const { openSupportChat } = useSupport();
 
   useEffect(() => {
     if (shipment?.timeline && shipment.timeline.length > 0) {
@@ -391,6 +394,16 @@ const ShipmentDetailsPanel = ({ shipment, onClose, onEdit, onDelete, onStatusCha
 
       {/* Sticky Bottom Actions Footer Bar */}
       <div className="sticky bottom-0 bg-white border-t border-[#EEF4E8] px-6 py-3.5 z-20 shadow-sm flex items-center justify-end gap-2.5">
+        <button
+          type="button"
+          onClick={() => openSupportChat(shipment.trackingNo)}
+          className="px-3.5 py-2 bg-[#F0F5EC] hover:bg-[#E2EDD6] text-[#233D19] font-bold text-xs rounded-xl flex items-center gap-1.5 border border-[#DCE6D2] shadow-2xs transition cursor-pointer"
+          title="Open AI Support Chat"
+        >
+          <MessageSquare className="w-4 h-4 text-[#587640]" />
+          <span>Support Bot</span>
+        </button>
+
         <button
           type="button"
           onClick={handleDownloadCSV}

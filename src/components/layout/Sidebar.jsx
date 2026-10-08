@@ -27,11 +27,11 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 bg-white border-r border-[#E1EAD8] flex flex-col justify-between h-screen sticky top-0 z-30 select-none flex-shrink-0 font-['Inter']">
+    <aside className="w-64 bg-[#F0F5EC] border-r border-[#DCE6D2] flex flex-col justify-between h-screen sticky top-0 z-30 select-none flex-shrink-0 font-['Inter']">
       
       {/* Top Header & Brand Logo */}
       <div>
-        <div className="p-6 border-b border-[#E1EAD8]">
+        <div className="p-6 border-b border-[#DCE6D2]">
           <Logo size="medium" />
         </div>
 
@@ -47,8 +47,8 @@ const Sidebar = () => {
                 to={item.path}
                 className={`flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-semibold transition-all duration-200 ${
                   isActive
-                    ? 'bg-[#EEF4E8] text-[#233D19] font-bold shadow-2xs border border-[#DCE6D2]'
-                    : 'text-[#4A6437] hover:bg-[#F7F9F5] hover:text-[#233D19]'
+                    ? 'bg-[#DCE8CE] text-[#233D19] font-bold shadow-2xs border border-[#C6D8B0]'
+                    : 'text-[#4F683E] hover:bg-[#E4ECCF] hover:text-[#233D19]'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -65,14 +65,14 @@ const Sidebar = () => {
             );
           })}
 
-          <div className="pt-4 mt-2 border-t border-[#E1EAD8]">
+          <div className="pt-4 mt-2 border-t border-[#DCE6D2]">
             <NavLink
               to="/settings"
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-semibold transition-all duration-200 ${
                   isActive
-                    ? 'bg-[#EEF4E8] text-[#233D19] font-bold shadow-2xs border border-[#DCE6D2]'
-                    : 'text-[#4A6437] hover:bg-[#F7F9F5] hover:text-[#233D19]'
+                    ? 'bg-[#DCE8CE] text-[#233D19] font-bold shadow-2xs border border-[#C6D8B0]'
+                    : 'text-[#4F683E] hover:bg-[#E4ECCF] hover:text-[#233D19]'
                 }`
               }
             >
@@ -84,10 +84,10 @@ const Sidebar = () => {
       </div>
 
       {/* Bottom Promo / Quote Illustration Card */}
-      <div className="p-4 m-4 bg-[#F7F9F5] rounded-3xl border border-[#DCE6D2] relative overflow-hidden shadow-2xs">
+      <div className="p-4 m-4 bg-white/90 backdrop-blur-xs rounded-3xl border border-[#DCE6D2] relative overflow-hidden shadow-2xs">
         <div className="flex items-center justify-center mb-2">
           {/* Leaves & Box Illustration */}
-          <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center border border-[#DCE6D2] shadow-2xs">
+          <div className="w-14 h-14 bg-[#F0F5EC] rounded-2xl flex items-center justify-center border border-[#DCE6D2] shadow-2xs">
             <Package className="w-7 h-7 text-[#385429]" />
           </div>
         </div>

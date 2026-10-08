@@ -36,6 +36,7 @@ import { toast } from 'react-toastify';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import { useShipments, generateTimelineForStatus } from '../context/ShipmentContext';
 import { useCustomers } from '../context/CustomerContext';
+import { useSupport } from '../context/SupportContext';
 
 const RECENT_SEARCHES_KEY = 'deliverly_recent_tracking_searches';
 
@@ -43,6 +44,7 @@ const ParcelTrackingPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { shipments = [], updateShipmentStatus } = useShipments();
   const { customers = [] } = useCustomers();
+  const { openSupportChat } = useSupport();
 
   // URL parameter extraction
   const trackingNoFromUrl = searchParams.get('trackingNo') || searchParams.get('id');
@@ -1193,7 +1195,7 @@ const ParcelTrackingPage = () => {
 
               <button
                 type="button"
-                onClick={() => toast.info('Support team notified! Live agent will connect with you.')}
+                onClick={() => openSupportChat(activeShipment?.trackingNo || trackingSearchTerm)}
                 className="w-full border border-[#587640] text-[#233D19] hover:bg-[#F0F5EC] py-2.5 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
                 <MessageSquare className="w-4 h-4 text-[#587640]" />
