@@ -22,7 +22,7 @@ const Sidebar = () => {
     { name: 'Customers', path: '/customers', icon: Users },
     { name: 'Parcel Tracking', path: '/tracking', icon: MapPin },
     { name: 'Delivery Status', path: '/status', icon: ShieldCheck },
-    { name: 'Notifications', path: '/notifications', icon: Bell, badge: '3' },
+    { name: 'Notifications', path: '/notifications', icon: Bell },
     { name: 'Reports', path: '/reports', icon: BarChart2 },
   ];
 

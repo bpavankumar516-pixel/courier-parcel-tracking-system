@@ -226,13 +226,18 @@ const CustomersPage = () => {
           
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h1 className="font-['Plus_Jakarta_Sans'] text-2xl font-extrabold text-[#233D19] tracking-tight">
-                Customer Management
-              </h1>
-              <p className="text-xs text-[#698453] mt-0.5">
-                Manage registered customer accounts, shipping histories, and tiers.
-              </p>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-[#EAF3D8] flex items-center justify-center border border-[#DCE6D2] text-[#233D19] shadow-2xs">
+                <Users className="w-6 h-6 text-[#233D19]" />
+              </div>
+              <div>
+                <h1 className="font-['Plus_Jakarta_Sans'] text-2xl sm:text-3xl font-extrabold text-[#233D19] tracking-tight">
+                  Customers
+                </h1>
+                <p className="text-xs sm:text-sm text-[#5C7847] mt-0.5 font-medium">
+                  Manage registered customer accounts, shipping histories, and tiers.
+                </p>
+              </div>
             </div>
 
             <div className="flex items-center gap-2 self-start sm:self-auto">
