@@ -181,6 +181,26 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
+  // Update User Profile state
+  const updateUserProfile = (updatedFields) => {
+    if (!user) return;
+    const updatedUser = { ...user, ...updatedFields };
+    setUser(updatedUser);
+    localStorage.setItem('courier_user', JSON.stringify(updatedUser));
+
+    // Also update registered users cache if found
+    try {
+      const users = getRegisteredUsers();
+      const idx = users.findIndex((u) => u.email.toLowerCase() === user.email.toLowerCase());
+      if (idx !== -1) {
+        users[idx] = { ...users[idx], ...updatedFields };
+        localStorage.setItem('courier_registered_users', JSON.stringify(users));
+      }
+    } catch (e) {
+      console.error('Failed to update registered users cache', e);
+    }
+  };
+
   // Logout handler
   const logout = () => {
     setUser(null);
@@ -195,6 +215,7 @@ export const AuthProvider = ({ children }) => {
         login,
         register,
         resetPassword,
+        updateUserProfile,
         logout,
         isAuthenticated: !!user
       }}

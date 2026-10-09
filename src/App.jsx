@@ -7,6 +7,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ShipmentProvider } from './context/ShipmentContext';
 import { CustomerProvider } from './context/CustomerContext';
 import { SupportProvider } from './context/SupportContext';
+import { SettingsProvider } from './context/SettingsContext';
 
 import SupportChatDrawer from './components/common/SupportChatDrawer';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -22,6 +23,7 @@ import ParcelTrackingPage from './pages/ParcelTrackingPage';
 import ReportsPage from './pages/ReportsPage';
 import DeliveryStatusPage from './pages/DeliveryStatusPage';
 import NotificationsPage from './pages/NotificationsPage';
+import SettingsPage from './pages/SettingsPage';
 
 function App() {
   return (
@@ -29,65 +31,67 @@ function App() {
       <ShipmentProvider>
         <CustomerProvider>
           <SupportProvider>
-            <Router>
-              <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={true}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored"
-              />
-              <SupportChatDrawer />
-              <Routes>
-                {/* Public Auth Routes */}
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-
-                {/* Protected Routes */}
-                <Route
-                  path="/dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <DashboardPage />
-                    </ProtectedRoute>
-                  }
+            <SettingsProvider>
+              <Router>
+                <ToastContainer
+                  position="top-right"
+                  autoClose={3000}
+                  hideProgressBar={false}
+                  newestOnTop={true}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme="colored"
                 />
-                
-                <Route
-                  path="/shipments"
-                  element={
-                    <ProtectedRoute>
-                      <ShipmentsPage />
-                    </ProtectedRoute>
-                  }
-                />
+                <SupportChatDrawer />
+                <Routes>
+                  {/* Public Auth Routes */}
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-                <Route
-                  path="/customers"
-                  element={
-                    <ProtectedRoute>
-                      <CustomersPage />
-                    </ProtectedRoute>
-                  }
-                />
+                  {/* Protected Routes */}
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <ProtectedRoute>
+                        <DashboardPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  
+                  <Route
+                    path="/shipments"
+                    element={
+                      <ProtectedRoute>
+                        <ShipmentsPage />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                {/* Secondary Sub-routes */}
-                <Route path="/tracking" element={<ProtectedRoute><ParcelTrackingPage /></ProtectedRoute>} />
-                <Route path="/status" element={<ProtectedRoute><DeliveryStatusPage /></ProtectedRoute>} />
-                <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
-                <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
-                <Route path="/settings" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+                  <Route
+                    path="/customers"
+                    element={
+                      <ProtectedRoute>
+                        <CustomersPage />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                {/* Fallback Route */}
-                <Route path="*" element={<Navigate to="/dashboard" replace />} />
-              </Routes>
-            </Router>
+                  {/* Secondary Sub-routes */}
+                  <Route path="/tracking" element={<ProtectedRoute><ParcelTrackingPage /></ProtectedRoute>} />
+                  <Route path="/status" element={<ProtectedRoute><DeliveryStatusPage /></ProtectedRoute>} />
+                  <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
+                  <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
+                  <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+
+                  {/* Fallback Route */}
+                  <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                </Routes>
+              </Router>
+            </SettingsProvider>
           </SupportProvider>
         </CustomerProvider>
       </ShipmentProvider>
